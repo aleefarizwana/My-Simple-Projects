@@ -1,0 +1,48 @@
+create file named "UserController" in  "C:\Users\aleef\OneDrive\Desktop\New_folder\Spring_Boot_Project\sb_registrationform\src\main\java\com\example\demo\controller"
+
+UserController
+======================
+package com.example.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;                      //import this not another Model from ui only...
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.example.demo.entity.User;
+import com.example.demo.service.UserService;
+
+@Controller									//annotate as controller
+public class UserController {
+		@Autowired
+		private UserService service;
+		@GetMapping("/")				// call method using "/"
+		public String register(Model model) {
+			User user=new User();
+			model.addAttribute("user",user);
+			return "register";			//return register page
+		} 							//need to create dynamic template for this in project src/main/resoucres ,create a file in templates
+										//creating a register.html file,write content(register form str),localhost:8080 in chrome -->displays content
+										//create one register form 9bootstrap and thymeleaf
+		
+		
+			@PostMapping("/registerUser")
+			public String registerUser(@ModelAttribute("user")User user){
+				String result="error";
+				System.out.println(user);
+				if(user.getPassword().equals(user.getConfirm_pwd())) {
+					try {
+						service.registerUser(user);
+						result= "home";
+					}
+					catch(Exception e) {
+						result="error";
+					}
+				}
+				return result;
+				
+			
+		}
+}
